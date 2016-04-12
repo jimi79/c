@@ -1,0 +1,3 @@
+#!/bin/bash
+[ ! -d bin ] && mkdir bin
+make && find bin/* -executable -exec cp -uv {} ~/bin \;

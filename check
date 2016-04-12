@@ -1,0 +1,32 @@
+#!/bin/bash
+cat > all
+
+
+
+grep ";0;" all | awk -F ';' {'print $3'} > a
+grep ";1;" all | awk -F ';' {'print $3'} > b
+grep ";2;" all | awk -F ';' {'print $3'} > c
+
+
+# the thing has to be all values
+
+[ -f d ] && rm d
+max=$(tail -n 1 a)
+maxb=$(tail -n 1 b)
+maxc=$(tail -n 1 c)
+
+[ $maxb -lt $max ] && max=$maxb
+[ $maxc -lt $max ] && max=$maxc
+
+for i in $(seq 0 $max); do 
+	echo $i >> d
+done
+
+head -n $(($max + 1)) a | sponge a
+head -n $(($max + 1)) b | sponge b
+head -n $(($max + 1)) c | sponge c
+
+diff a d
+diff b d
+diff c d
+
