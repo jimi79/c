@@ -17,14 +17,14 @@ void display_usage(char error[1024]) {
 	if (!strcmp(error, "")) { 
 		printf("%s\n", error);
 	}
-	printf("Usage : split  [if=source_file] of=dest_file [of=next_dest_file] [key=hexa value] [BS=block size]\n");
+	printf("Usage : cblk-split  [if=source_file] of=dest_file [of=next_dest_file] [key=hexa value] [BS=block size]\n");
 	printf("\n");
 	printf(" Read source_file, with key, to split into dest_files\n");
 	printf("\n"); 
 	printf(" default values :\n");
 	printf("   if : stdin\n"); 
 	printf(" 	 key : default key (not recommanded). If the key isn't set, then it's returned.\n");
-	printf(" 	 BS : 1 (best value, slowest\n");
+	printf(" 	 BS : 1 (slowest)\n");
 } 
 
 int new_if(char value[]) {

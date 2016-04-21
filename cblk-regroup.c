@@ -17,14 +17,14 @@ void display_usage(char error[1024]) {
 	if (!strcmp(error, "")) { 
 		printf("%s\n", error);
 	}
-	printf("Usage : regroup if=source_file [if=next_source_file] [of=dest_file] [key=hexa value] [BS=block size]\n");
+	printf("Usage : cblk-regroup if=source_file [if=next_source_file] [of=dest_file] [key=hexa value] [BS=block size]\n");
 	printf("\n");
 	printf(" Read all source_file, with key, to create dest_file\n");
 	printf("\n"); 
 	printf(" default values :\n");
 	printf("   if : stdout\n"); 
 	printf(" 	 key : default key (not recommanded)\n");
-	printf(" 	 BS : 1 (best value, slowest\n");
+	printf(" 	 BS : 1 (slowest)\n");
 } 
 
 int new_of(char value[]) {
