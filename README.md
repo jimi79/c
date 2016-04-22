@@ -17,7 +17,7 @@ some c stuff
 
 Example
 
-> echo "Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test"|cblk-split of=a of=b key=030405 BS=1
+<pre>echo "Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test"|cblk-split of=a of=b key=030405 BS=1</pre>
 
 a's content :
 > Cect un t, Cst est, i esteseci eun tCect un t, Cst est, i estes"
@@ -49,7 +49,7 @@ So stdin is splitted into a and b.
 >          BS : 1
 
 Example, following the cblk-split example
-> cblk-regroup if=a if=b key=020304 BS=1
+<pre>cblk-regroup if=a if=b key=020304 BS=1</pre>
 will generate the original stdin.
 
 ##### cblk-genkey [value]
