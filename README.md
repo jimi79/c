@@ -17,7 +17,8 @@ some c stuff
 
 Example
 
-<pre>echo "Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test"|cblk-split of=a of=b key=030405 BS=1</pre>
+<pre>echo "Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test, Ceci est un test" > file
+cat file|cblk-split of=a of=b key=030405 BS=1</pre>
 
 a's content :
 > Cect un t, Cst est, i esteseci eun tCect un t, Cst est, i estes"
