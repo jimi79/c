@@ -4,10 +4,9 @@
 
 
 // external 
-char files_out[1024][1024]; // 1024 max of 1024 char. i really think i should do pointers sometime. I'll check what is the best for char
-// and then how to handle, let's say, a dynamic array of internet on internet
+char files_out[1024][1024];
 char file_in[1024];
-int key[1024] =  {1, 2, 2, 3, 1, 3, 2, 1, 1, 1, 3, 2, 2, 1, 2, 1, 1, 2};
+int key[1024] =  {1, 2, 2, 3, 1, 3, 2, 1, 1, 1, 3, 2, 2, 1, 2, 1, 1, 2}; // random value, do not use
 int block_size=1; //block size
 // internal
 int key_size = 18;
