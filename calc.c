@@ -42,6 +42,5 @@ int main() {
 	for (i = 0; i < 5000; i++) {
 		calcadrint(i, nbvol, key, sizekey, sum, &vol, &adrext); 
 		printf("%d;%d;%d\n", i, vol, adrext); 
-
 	}
 }

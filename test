@@ -1,0 +1,16 @@
+#!/bin/bash
+
+printf "Creating the original file, from a man page\n"
+man man > original
+printf "Splitting the file into 3 files\n"
+key=$(bin/cblk-split if=original of=fileA of=fileB of=fileC BS=2) # block size: bigger mean faster, but less safe. best value is 1
+printf "Key used=%s\n" $key
+printf "Displaying content of first file, but it won't make any sense:\n=================================\n"
+head fileA
+printf "========================\n"
+printf "Regrouping files\n"
+bin/cblk-regroup key=$key if=fileA if=fileB if=fileC BS=2 > recreated
+diff recreated original && printf "cblk reconstructed the original file properly\n"
+printf "Cleaning\n" # comment that out if you want to 
+#rm fileA fileB fileC original recreated
+
