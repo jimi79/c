@@ -7,7 +7,7 @@
 char files_in[1024][1024]; // 1024 max of 1024 char. i really think i should do pointers sometime. I'll check what is the best for char
 // and then how to handle, let's say, a dynamic array of internet on internet
 char file_out[1024];
-int key[1024] =  {1, 2, 2, 3, 1, 3, 2, 1, 1, 1, 3, 2, 2, 1, 2, 1, 1, 2};
+int key[4096];
 int block_size = 1; //block size
 // internal
 int key_size = 18;
@@ -22,16 +22,16 @@ void display_usage(char error[1024]) {
 	printf(" Read all source_file, with key, to create dest_file\n");
 	printf("\n"); 
 	printf(" default values :\n");
-	printf("   if : stdout\n"); 
-	printf(" 	 key : default key (not recommanded)\n");
-	printf(" 	 BS : 1 (slowest)\n");
+	printf("   if: stdout\n"); 
+	printf(" 	 key: no default value\n");
+	printf(" 	 BS: 1 (slowest)\n");
 } 
 
 int new_of(char value[]) {
 	//printf("new if %s\n", value);
 	memcpy(file_out, value, strlen(value));
 	file_out[strlen(value)] = '\0';
-	return 0;
+	return 1;
 }
 
 int new_if(char value[]) {
@@ -40,7 +40,7 @@ int new_if(char value[]) {
 	memcpy(files_in[files_in_count], value, strlen(value));
 	files_in[files_in_count][strlen(value)] = '\0';
 	files_in_count++;
-	return 0;
+	return 1;
 }
 
 int set_key(char value[]) {
@@ -59,14 +59,14 @@ int set_key(char value[]) {
 		//printf("%d\n", number);
 		key[i] = number; 
 	} 
-	return 0;
+	return 1;
 }
 
 int set_block_size(char value[]) {
 	// have to convert char to int here ...
 	block_size = (int) strtol(value, NULL, 10);
 	//printf("set BS %d\n", block_size);
-	return 0;
+	return 1;
 }
 
 int process() {
@@ -125,7 +125,8 @@ int parse_parameters(int argc, char *argv[])
 {
 	int pos_equal; // position of sign = in each string
 	int i;
-
+	int key_defined=0;
+	int ok;
 	for(i = 1; i < argc; i++) {
 		char *ptr = strchr(argv[i], '=');
 		if (ptr) {
@@ -136,39 +137,51 @@ int parse_parameters(int argc, char *argv[])
 			char value[strlen(argv[i]) - index];
 			memcpy(value, &argv[i][index + 1], strlen(argv[i]) - index);
 			//printf("%s=%s\n", code, value); 
-			int ok;
-			if (!strcmp(code, "if")) { ok = new_if(value); }
-			if (!strcmp(code, "of")) { ok = new_of(value); }
-			if (!strcmp(code, "key")) { ok = set_key(value); }
-			if (!strcmp(code, "BS")) { ok = set_block_size(value); }
-			if (ok != 0) { return ok; }; 
-		} else
-		{ printf("Error, all parameters should be code=value. '%s' isn't\n", argv[i]); };
+			if (!strcmp(code, "if")) {
+				ok = new_if(value);
+			}
+			if (!strcmp(code, "of")) {
+				ok = new_of(value);
+			}
+			if (!strcmp(code, "key")) {
+				ok = set_key(value);
+				key_defined = 1;
+				printf("key filled\n");
+			}
+			if (!strcmp(code, "BS")) {
+				ok = set_block_size(value);
+			}
+			if (!ok) {
+				return ok;
+			}; 
+		} else {
+			fprintf(stderr, "Error, all parameters should be code=value. '%s' isn't\n", argv[i]);
+		};
 	};
-	return 0;
+	if (!key_defined) {
+		fprintf(stderr, "Key is missing\n");
+		return 0;
+	} 
+	return 1;
 };
 
 
 int main (int argc, char *argv[])
 { 
 	file_out[0] = '\0';
-	int ok = parse_parameters(argc, argv);
-	if (ok != 0) { return ok; };
+	if (!parse_parameters(argc, argv)) {
+		return 1; // 0 means ok for the output
+	}
 
 	if (argc == 0) {
 		display_usage("");
-		return 1;
+		return 0;
 	}
 
 	if (files_in_count == 0) {
 		display_usage("No input defined !\n");
-		return 1;
+		return 2;
 	}
-
-	if (key_size == files_in_count) {
-		printf("key size equal files in count, not random enough\n");
-		return 1;
-	} 
 
 	process(); 
 	return 0;

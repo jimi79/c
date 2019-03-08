@@ -61,30 +61,29 @@ void display_usage(char error[1024]) {
 int new_if(char value[]) {
 	memcpy(file_in, value, strlen(value));
 	file_in[strlen(value)] = '\0';
-	return 0;
+	return 1;
 }
 
 int new_of(char value[]) {
 	memcpy(files_out[files_out_count], value, strlen(value));
 	files_out[files_out_count][strlen(value)] = '\0';
 	files_out_count++; 
-	return 0;
+	return 1;
 }
 
 int set_key(char value[]) {
 	int err_high_values = 0;
 	int l = strlen(value);
 	key_size = l / 2; 
-	int m = key_size % files_out_count;
 	if (key_size > MAX_KEY_SIZE) {
 		fprintf(stderr, "key size is longer than max size (%d)\n", MAX_KEY_SIZE);
-		exit(1); 
+		return 0;
 	}
+	int m = key_size % files_out_count;
 	if (m == 0) {
 		fprintf(stderr, "Key has to not be a multiply of the number of stdout\n");
-		return 1;
+		return 0;
 	} 
-	printf("2\n");
 	int i;
 	for (i = 0; i < key_size; i++) {
 		char val[3];
@@ -92,27 +91,27 @@ int set_key(char value[]) {
 		val[1] = value[i * 2 + 1];
 		val[2] = '\0';
 		int number = (int) strtol(val, NULL, 16);
-		//printf("%d\n", number);
 		key[i] = number; 
 		if (number > 20) {
 			err_high_values = 1;
 		}
 		if (number <= 0) {
 			fprintf(stderr, "Key has 0 values\n");
-			return 1;
+			return 0;
 		}
 	} 
 	if (err_high_values) {
 		fprintf(stderr, "Key contain some high values\n");
+		return 0;
 	} 
-	return 0;
+	return 1;
 }
 
 int set_block_size(char value[]) {
 	// have to convert char to int here ...
 	block_size = (int) strtol(value, NULL, 10);
 	//printf("set BS %d\n", block_size);
-	return 0;
+	return 1;
 }
 
 int process() {
@@ -185,7 +184,7 @@ int parse_parameters(int argc, char *argv[])
 				generated_key = 0;
 			}
 			if (!strcmp(code, "BS")) { ok = set_block_size(value); }
-			if (ok != 0) {
+			if (!ok) {
 				return ok;
 			}; 
 		} else {
@@ -193,7 +192,10 @@ int parse_parameters(int argc, char *argv[])
 		};
 	};
 	if (generated_key) {
-		key_size = files_out_count+1;
+		key_size = 21+files_out_count; 
+		while (key_size % files_out_count == 0) {
+			key_size++;
+		}
 		generate_key(key_size);
 	} else { 
 		ok = set_key(key);
