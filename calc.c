@@ -16,7 +16,6 @@ void calcadrint(int adrext, int nbvol, int* key, int sizekey, int sum, int* vol,
 		adrext = adrext - key[i];
 		shiftvol[vid] += key[i];
 		vid = (vid + 1) % nbvol;
-		//printf("--%d---%d---%d---%d\n", adrext, vid, key[i], i);
 		i = (i + 1) % (sizekey);
 	}
 	tempadrint = tempadrint + adrext + shiftvol[vid];
@@ -28,8 +27,6 @@ void calcadrint(int adrext, int nbvol, int* key, int sizekey, int sum, int* vol,
 
 
 int main() { 
-	//test();
-	//return 0;
 	int key[10] = {1,2,5,4,23,3,4,54,2,3}; // TODO : use a string to represent that in hexa maybe, like 0102030C05 for that example
 	int sizekey = sizeof(key) / sizeof(key[0]);
 	int nbvol = 3;
