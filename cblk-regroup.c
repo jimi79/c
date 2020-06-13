@@ -146,7 +146,6 @@ int parse_parameters(int argc, char *argv[])
 			if (!strcmp(code, "key")) {
 				ok = set_key(value);
 				key_defined = 1;
-				printf("key filled\n");
 			}
 			if (!strcmp(code, "BS")) {
 				ok = set_block_size(value);
