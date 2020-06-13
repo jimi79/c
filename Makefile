@@ -1,7 +1,7 @@
 BIN=./bin
 SOURCE=./
 
-LIST=$(BIN)/cblk-regroup $(BIN)/cblk-split $(BIN)/uptime-short
+LIST=$(BIN)/cblk-regroup $(BIN)/cblk-split $(BIN)/short-uptime
 
 all: $(LIST)
 
