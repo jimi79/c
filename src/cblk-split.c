@@ -39,7 +39,8 @@ int generate_key(int size) {
 	srand(time(NULL));
 	int i;
 	for(i = 0; i < size; i++) {
-		key[i] = randint(20)+1;
+		//#key[i] = randint(20)+1;
+		key[i] = randint(10)+1;
  		printf("%02x", key[i]);
 	}
 }
@@ -160,7 +161,7 @@ int process() {
 int parse_parameters(int argc, char *argv[])
 {
 	int pos_equal; // position of sign = in each string
-	int ok = 0;
+	int ok = 1; // true
 	int i; 
 	char* key;
 	for(i = 1; i < argc; i++) {
@@ -192,7 +193,7 @@ int parse_parameters(int argc, char *argv[])
 		};
 	};
 	if (generated_key) {
-		key_size = 21+files_out_count; 
+		key_size = 21 + files_out_count; 
 		while (key_size % files_out_count == 0) {
 			key_size++;
 		}
@@ -200,23 +201,20 @@ int parse_parameters(int argc, char *argv[])
 	} else { 
 		ok = set_key(key);
 		free(key); 
-		if (ok != 0) { 
-			return ok; // something wrong happened
-		}
 	}
-	return 0;
+	return ok;
 };
 
 
 int main (int argc, char *argv[])
 { 
 	file_in[0] = '\0'; 
-	if (argc == 0) {
+	if (argc == 1) {
 		display_usage("");
 		return 1;
 	} 
 	int ok = parse_parameters(argc, argv);
-	if (ok != 0) { return ok; }; 
+	if (! ok) { return ok; }; 
 	if (files_out_count == 0) {
 		display_usage("No output defined !\n");
 		return 1;

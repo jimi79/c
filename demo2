@@ -1,0 +1,49 @@
+#!/bin/bash
+
+install() {
+	printf "Can't find binaries, building them\n"
+	./install
+}
+
+[ ! -f cblk-split ] || [ ! -f cblk-regroup ] && install
+
+
+key=0405020a080203010407
+passwordFileA=passFileA_cantfIndIt
+passwordFileB=notpassFileB_cantfIndIt
+passwordFileC=passFileC_cantTouchThis
+
+printf "We gonna get a man file, then split it, send it on a server in pieces, then fetching it\n"
+printf "We'll work in a tmp subddir, so you can explore\n"
+
+mkdir -p tmp
+cd tmp
+
+printf "we create a file 'original'\n"
+man man > original
+
+printf "we split it into 3 pieces, with a defined key\n"
+../cblk-split if=original of=fileA of=fileB of=fileC key=$key
+
+printf "we upload all these files, each with a different pass\n"
+
+
+urlA=$(cat fileA | curl -s -F "password=$passwordFileA" -F data=@- https://share.jim.netnix.in/share.php)
+urlB=$(cat fileB | curl -s -F "password=$passwordFileB" -F data=@- https://share.jim.netnix.in/share.php)
+urlC=$(cat fileC | curl -s -F "password=$passwordFileC" -F data=@- https://share.jim.netnix.in/share.php)
+
+printf "we clean everyting\n"
+rm fileA fileB fileC original
+
+printf "assume we are on another computer now\n"
+printf "we get back the file\n"
+urlA=${urlA/enter_your_password_here/$passwordFileA}
+urlB=${urlB/enter_your_password_here/$passwordFileB}
+urlC=${urlC/enter_your_password_here/$passwordFileC}
+curl $urlA > fileA
+curl $urlB > fileB
+curl $urlC > fileC
+
+../cblk-regroup if=fileA if=fileB if=fileC of=recreated key=$key
+
+printf "now you have in tmp/recreated the content of the original file\n"

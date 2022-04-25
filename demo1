@@ -1,0 +1,48 @@
+#!/bin/bash
+
+install() {
+	printf "Can't find binaries, building them\n"
+	./install
+}
+
+[ ! -f cblk-split ] || [ ! -f cblk-regroup ] && install
+
+BS=1
+
+printf "Creating the original file, from a man page\n"
+man man | head -n 4 > original
+printf "Splitting the file into 3 files\n"
+key=$(./cblk-split if=original of=fileA of=fileB of=fileC BS=$BS) # block size: bigger mean faster, but less safe. best value is 1
+# program generate a random key if none is given
+printf "\n"
+printf "Key used=%s\n" $key
+printf "\n"
+printf "First file fileA\n"
+printf -- '---------------\n'
+cat fileA
+printf "\n"
+printf "\n"
+
+printf "Second file fileB\n"
+printf -- '---------------\n'
+cat fileB
+printf "\n"
+printf "\n"
+
+printf "Third file fileC\n"
+printf -- '---------------\n'
+cat fileC
+printf "\n"
+printf "\n"
+
+printf "Regrouping files\n"
+./cblk-regroup key=$key if=fileA if=fileB if=fileC BS=$BS > recreated
+diff recreated original && printf "cblk reconstructed the original file properly\n"
+
+printf -- "--> Content of the recreated file\n"
+printf "Displaying content of the recrated file\n"
+printf -- '---------------\n'
+cat recreated
+
+#printf "Cleaning\n" # comment that out if you want to 
+rm fileA fileB fileC original recreated

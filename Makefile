@@ -1,10 +1,13 @@
 BIN=./bin
-SOURCE=./
+SOURCE=./src/
 
-LIST=$(BIN)/cblk-regroup $(BIN)/cblk-split $(BIN)/short-uptime
+LIST=cblk-regroup cblk-split 
 
 all: $(LIST)
 
-$(BIN)/%: $(SOURCE)%.c
+clean:
+	rm -rf cblk-split cblk-regroup
+
+%: $(SOURCE)%.c
 	$(CC) $(INC) $< $(CFLAGS) -o $@ $(LIBS)
 
